@@ -1,12 +1,11 @@
-# Przewodnik Entity Framework 6.2
 
-## Instalacja biblioteki
+# Instalacja biblioteki
 
 ~~~ bash
 PM> Install-Package EntityFramework
 ~~~
 
-## Utworzenie kontekstu
+# Utworzenie kontekstu
 
 ~~~ csharp
 public class MyContext : DbContext
@@ -20,9 +19,15 @@ public class MyContext : DbContext
 }
 ~~~
 
-## Połączenie do bazy danych
+# Połączenie do bazy danych
 
-### Algorytm wyszukiwania bazy danych
+~~~ xaml
+ <connectionStrings>
+    <add name="MyConnection" providerName="System.Data.SqlClient" connectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MyDb;Integrated Security=True" />
+  </connectionStrings>
+~~~
+
+## Algorytm wyszukiwania bazy danych
 
 1. Jeśli w konstruktorze DbContext podano nazwę połączenia to szuka jej w pliku konfiguracynym app.config w sekcji _connectionStrings_ 
 
@@ -33,8 +38,7 @@ public class MyContext : DbContext
 4. Szuka bazy danych LocalDb o adresie (localdb)\mssqllocaldb
 
 
-
-### Wyświetlenie parametrów połączenia
+## Wyświetlenie parametrów połączenia
 
 ~~~ csharp
 Console.WriteLine(context.Database.Connection.ConnectionString);
@@ -48,19 +52,19 @@ https://docs.microsoft.com/en-us/sql/azure-data-studio/download?view=sql-server-
 
 
 
-## Przydatne polecenia PMC
-- ``` Enable-Migrations ``` - włączenie migracji
-- ``` Add-Migration {migration} ``` - utworzenie migracji
-- ``` Update-Database ``` - aktualizacja bazy danych do najnowszej wersji
-- ``` Update-Database -script ``` - wygenerowanie skryptu do aktualizacji bazy danych do najnowszej wersji
-- ``` Update-Database -verbose ``` - aktualizacja bazy danych do najnowszej wersji + wyświetlanie logu
-- ``` Update-Database -TargetMigration: {migration} ``` - aktualizacja bazy danych do wskazanej migracji
-- ``` Update-Database -SourceMigration: {migrationA} -TargetMigration: {migrationB}  ```  - aktualizacja bazy danych pomiędzy migracjami
 
 
-## DbContext
+# DbContext
 Klasa DbContext jest główną częścią Entity Framework. Instacja DbContext reprezentuje sesję z bazą danych.
 
+## Zadania DbContext:
+ 1. Zarządzanie połączeniem z bazą danych
+ 2. Konfiguracja modelu i relacji
+ 3. Odpytywanie bazy danych
+ 4. Zapisywanie danych do bazy danych
+ 5. Śledzenie zmian
+ 6. Cache'owanie
+ 7. Zarządzanie transakcjami
 
 Models.cs
 
@@ -82,7 +86,6 @@ public class Customer
     public string LastName { get; set; }
     public bool IsDeleted { get; set; }
 }
-
 ~~~
 
 
@@ -101,22 +104,6 @@ public class MyContext : DbContext
 }
 ~~~
 
-~~~ csharp
-
-using (var context = new MyContext(optionsBuilder.Options))
-{
-  // do stuff
-}
-~~~
-
-DbContext umożliwia następujące zadania:
- 1. Zarządzanie połączeniem z bazą danych
- 2. Konfiguracja modelu i relacji
- 3. Odpytywanie bazy danych
- 4. Zapisywanie danych do bazy danych
- 5. Śledzenie zmian
- 6. Cache'owanie
- 7. Zarządzanie transakcjami
 
 ## Właściwości DbContext
 | Metoda | Użycie |
@@ -125,7 +112,7 @@ DbContext umożliwia następujące zadania:
 | Database | Dostarcza informacje o bazie danych i umożliwia operacje na bazie danych |
 
 ## Fabryka
-Jeśli korzystamy z migracji, a konsuktor naszej klasy DbContext posiada parametr(y) nalezy utworzyć fabrykę:
+Jeśli korzystamy z migracji, a konstuktor naszej klasy DbContext posiada parametr(y) nalezy utworzyć fabrykę:
 
 ~~~ csharp
     
@@ -139,10 +126,38 @@ Jeśli korzystamy z migracji, a konsuktor naszej klasy DbContext posiada paramet
     
 ~~~
 
+# Konwencje
 
-## Konwencja relacji Jeden-do-wielu
+## Odkrywanie typów (Type Discovery)
+EF wyszukuje typy, która wskazane są poprzez właściwość DbSet i tworzy odpowiadające im tabele.
+Uwględnia również referencyjne typy właściwości, które nie są wskazane przez DbSet oraz typy, które dziedziczą po klasie bazowej wskazanej przez DbSet.
 
-### Konwencja 1
+## Konwencja nazywania tabel (Table Name Convention)
+Code First tworzy tabele o nazwach w liczbie mnogiej od nazwy encji.
+
+## Nazwy kolum
+EF wyszukuje wszystkie publiczne właściwości, które posiadają get i set i tworzy kolumny o takich samych nazwach.
+
+## Typy danych i rozmiar kolumn
+| .NET | SQL |
+|---|---|
+| string | nvarchar(max) |
+| decimal | decimal(18, 2) |
+| double | float |
+| int | int |
+| bool | bit |
+| DateTime | datetime |
+| byte[] | varbinary(max) |
+
+## Klucz podstawowy (Primary Key)
+EF wyszukuje właściwość, której nazwa kończy się na **ID**. Wielkość liter nie ma znaczenia.
+
+
+## Klucze obce (Foreign Key)
+
+### Konwencja relacji Jeden-do-wielu
+
+#### Konwencja 1
 Encja zawiera navigation property.
 
 ``` csharp
@@ -164,7 +179,7 @@ public class Customer
 ```
 Zamówienie zawiera referencje do navigation property typu klient. EF utworzy shadow property CustomerId w modelu koncepcyjnym, które będzie mapowane do kolumny CustomerId w tabeli Orders.
 
-### Konwencja 2
+#### Konwencja 2
 Encja zawiera kolekcję.
 
 ``` csharp
@@ -187,7 +202,7 @@ public class Customer
 
 W bazie danych będzie taki sam rezultat jak w przypadku konwencji 1.
 
-### Konwencja 3
+#### Konwencja 3
 
 Relacja zawiera navigation property po obu stronach. W rezultacie otrzymujemy połączenie konwencji 1 i 2.
 
@@ -212,7 +227,7 @@ public class Customer
 
 ```
 
-### Konwencja 4
+#### Konwencja 4
 Konwencja z uzyciem wlasciwosci foreign key
 
 
@@ -238,7 +253,7 @@ public class Customer
 ```
 
 
-## Konwencja relacji Jeden-do-jeden
+### Konwencja relacji Jeden-do-jeden
 
 ``` csharp
 public class Order
@@ -259,7 +274,7 @@ public class Payment
 }
 ```
 
-## Konwencja relacji wiele-do-wielu
+### Konwencja relacji wiele-do-wielu
 
 
 ``` csharp
@@ -599,8 +614,18 @@ class EmployeeConfiguration : EntityTypeConfiguration<Employee>
 
 ~~~
 
-## Migracje
+# Migracje
 
+
+## Przydatne polecenia
+- ``` Enable-Migrations ``` - włączenie migracji
+- ``` Add-Migration {migration} ``` - utworzenie migracji
+- ``` Update-Database ``` - aktualizacja bazy danych do najnowszej wersji
+- ``` Update-Database -script ``` - wygenerowanie skryptu do aktualizacji bazy danych do najnowszej wersji
+- ``` Update-Database -verbose ``` - aktualizacja bazy danych do najnowszej wersji + wyświetlanie logu
+- ``` Update-Database -TargetMigration: {migration} ``` - aktualizacja bazy danych do wskazanej migracji
+- ``` Update-Database -SourceMigration: {migrationA} -TargetMigration: {migrationB}  ```  - aktualizacja bazy danych pomiędzy migracjami
+- 
 
 ### Utworzenie triggera
 1. Utwórz folder np. Scripts i plik OnDeleteOrderDetail.sql
