@@ -152,7 +152,6 @@ EF wyszukuje wszystkie publiczne właściwości, które posiadają get i set i t
 ## Klucz podstawowy (Primary Key)
 EF wyszukuje właściwość, której nazwa kończy się na **ID**. Wielkość liter nie ma znaczenia.
 
-
 ## Klucze obce (Foreign Key)
 
 ### Konwencja relacji Jeden-do-wielu
@@ -401,10 +400,14 @@ modelBuilder.Entity<User>()
 
 ```
 
+## Typ złożony (Complex Type)
+Jeśli klasa nie ma klucza podstawowego.
 
-## Śledzenie (Tracking)
 
-### AutoDetectChanges
+
+# Śledzenie (Tracking)
+
+## AutoDetectChanges
 
 Domyślnie śledzenie zmian jest włączone. W celu zwiększenia wydajności, zwłaszcza przy dodawaniu dużej ilości encji warto wyłączyć automatyczne wykrywanie zmian:
 
