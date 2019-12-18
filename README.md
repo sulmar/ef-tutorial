@@ -623,12 +623,17 @@ class EmployeeConfiguration : EntityTypeConfiguration<Employee>
 ## Przydatne polecenia
 - ``` Enable-Migrations ``` - włączenie migracji
 - ``` Add-Migration {migration} ``` - utworzenie migracji
+- ``` Add-Migration {migration} -force ``` - ponowne utworzenie migracji
 - ``` Update-Database ``` - aktualizacja bazy danych do najnowszej wersji
 - ``` Update-Database -script ``` - wygenerowanie skryptu do aktualizacji bazy danych do najnowszej wersji
 - ``` Update-Database -verbose ``` - aktualizacja bazy danych do najnowszej wersji + wyświetlanie logu
 - ``` Update-Database -TargetMigration: {migration} ``` - aktualizacja bazy danych do wskazanej migracji
-- ``` Update-Database -SourceMigration: {migrationA} -TargetMigration: {migrationB}  ```  - aktualizacja bazy danych pomiędzy migracjami
-- 
+- ``` Update-Database -SourceMigration: {migrationA} -TargetMigration: {migrationB}  ```  - aktualizacja bazy danych 
+pomiędzy migracjami
+- ``` Update-Database -TargetMigration: $InitialDatabase ``` - aktualizacja bazy danych do pustej bazy danych
+pomiędzy migracjami
+- ``` Update-Database -SourceMigration: $InitialDatabase -script``` - wygenerowanie kompletnego skryptu od pustej bazy danych
+
 
 ### Utworzenie triggera
 1. Utwórz folder np. Scripts i plik OnDeleteOrderDetail.sql
