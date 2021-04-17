@@ -58,13 +58,13 @@ https://docs.microsoft.com/en-us/sql/azure-data-studio/download?view=sql-server-
 Klasa DbContext jest główną częścią Entity Framework. Instacja DbContext reprezentuje sesję z bazą danych.
 
 ## Zadania DbContext:
- 1. Zarządzanie połączeniem z bazą danych
- 2. Konfiguracja modelu i relacji
- 3. Odpytywanie bazy danych
- 4. Zapisywanie danych do bazy danych
- 5. Śledzenie zmian
- 6. Cache'owanie
- 7. Zarządzanie transakcjami
+ 1. **Querying** - Konwertuje Linq-To-Entities do zapytań SQL i wysyła je do bazy danych
+ 2. **Change Tracking** - śledzenie zmian
+ 3. **Persisting Data** - Zapisywanie zmian encji w bazie danych
+ 4. **Caching** - pamięć podręczna pierwszego poziomu
+ 5. **Manage Relationship** - zarządzanie relacjami
+ 6. **Transactions** - zarządzanie transakcjami
+ 7. **Object Materialization** - konwersja surowych danych do obiektów encji
 
 Models.cs
 
