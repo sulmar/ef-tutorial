@@ -10,8 +10,8 @@ PM> Install-Package EntityFramework
 ~~~ csharp
 public class MyContext : DbContext
 {
-    public MyContext()
-      :base("MyDbConnection")
+    public MyContext(DbConnection connection, bool contextOwnsConnection)
+      :base(connection, contextOwnsConnection)
     { }
 
     public DbSet<Customer> Customers { get; set; }
