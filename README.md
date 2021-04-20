@@ -110,6 +110,7 @@ public class MyContext : DbContext
 |---|---|
 | ChangeTracker | Dostarcza informacje i operacje do śledzenie obiektów  |
 | Database | Dostarcza informacje o bazie danych i umożliwia operacje na bazie danych |
+| Configuration | Konfiguracja opcji |
 
 ## Fabryka
 Jeśli korzystamy z migracji, a konstuktor naszej klasy DbContext posiada parametr(y) nalezy utworzyć fabrykę:
